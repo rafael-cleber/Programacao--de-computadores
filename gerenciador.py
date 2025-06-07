@@ -7,6 +7,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def adicionar():
     valor = valor_input.get()
+    data = input_data.get()
+    status = status_var.get()
+
+    if not valor or data or status:
+        messagebox.showwarning('Erro', 'Preencha todos os dados')
 
 
 
