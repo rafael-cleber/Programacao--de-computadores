@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+from logica import listar_despesas
 
 
 def adicionar():
@@ -12,6 +13,14 @@ def adicionar():
 
     if not valor or data or status:
         messagebox.showwarning('Erro', 'Preencha todos os dados')
+
+
+def atualizar_lista():
+    listbox_despesas.delete(0, tk.END)
+    for d in listar_despesas():
+        texto = f"{d['data']} - R${d['valor']:.2f} ({d['status']})"
+        listbox_despesas.insert(tk.END, texto)
+
 
 
 
