@@ -25,8 +25,3 @@ def totais_por_status():
     total_pendentes = sum(d['valor'] for d in despesas if d['status'] == "Pendente")
     return total_pagas, total_pendentes
 
-
-
-
-
-
