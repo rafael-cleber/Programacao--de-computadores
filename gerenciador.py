@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-
-from logica import listar_despesas
+from logica import listar_despesas, totais_por_status, adicionar_despesa
 
 
 def adicionar():
@@ -11,9 +10,18 @@ def adicionar():
     data = input_data.get()
     status = status_var.get()
 
-    if not valor or data or status:
+    if not valor or not data or not status:
         messagebox.showwarning('Erro', 'Preencha todos os dados')
+        return
 
+    try:
+        adicionar_despesa(valor, data, status)
+        atualizar_lista()
+        atualizar_grafico()
+        valor_input.delete(0, tk.END)
+        input_data.delete(0, tk.END)
+    except ValueError as erro:
+        messagebox.showerror("Erro", str(erro))
 
 def atualizar_lista():
     listbox_despesas.delete(0, tk.END)
@@ -21,7 +29,14 @@ def atualizar_lista():
         texto = f"{d['data']} - R${d['valor']:.2f} ({d['status']})"
         listbox_despesas.insert(tk.END, texto)
 
-
+def atualizar_grafico():
+    pagas, pendentes = totais_por_status()
+    fig.clear()
+    ax = fig.add_subplot(111)
+    ax.bar(["Pagas", "Pendentes"], [pagas, pendentes], color=["green", "red"])
+    ax.set_ylabel("R$ Valor")
+    ax.set_title("Despesas: Pagas vs Pendentes")
+    canvas.draw()
 
 
 janela = tk.Tk()
@@ -56,8 +71,8 @@ fig = plt.Figure(figsize=(5, 3), dpi=100)
 canvas = FigureCanvasTkAgg(fig, master=janela)
 canvas.get_tk_widget().grid(row=7, column=0, columnspan=2)
 
+atualizar_grafico()
 janela.mainloop()
-
 
 
 
